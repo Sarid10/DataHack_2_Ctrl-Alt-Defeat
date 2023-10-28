@@ -16,10 +16,10 @@ def insert(name, vector):
 def get(vector):
   return index.query(
     vector=[vector],
-    top_k=3,
+    top_k=20,
     include_values=True
     )
   
 
-# insert("Anay Ahluwalia", [0.45547258853912354])
-# print(get([0.8994727969169617]))
+# insert("Tanay Desai", [0.39465588331222534])
+# print(get([0.39465588331222534]))
