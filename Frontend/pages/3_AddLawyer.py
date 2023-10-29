@@ -1,6 +1,5 @@
 import streamlit as st, pandas as pd, time
 from operations.db_operations import insert, get
-from operations.vectors import getVector
 
 st.title("Add Lawyer")
 
@@ -43,6 +42,11 @@ if choice != "Single Entry":
                 return str1_without_and
             info_lawyers[0]=info_lawyers[0].apply(remove_and)
 
+            
+            
+            new_df=pd.read_csv('new_df.csv')
+            import os
+            os.remove('new_df.csv')
             def add_comma(str1):
                 if str1[-1] != ",":
                     str1 += ","
@@ -148,6 +152,10 @@ if choice != "Single Entry":
                 return result
 
             lawyers['Lawyer Names'] = lawyers['Lawyer Names'].apply(remove_non_ascii)
+            lawyers['tags']=lawyers['field']+" "+lawyers['field']+" "+lawyers['location']+" "+lawyers['location']+" "+lawyers['location']+" "+lawyers['gender']+lawyers['lang']
+            df=lawyers[['Lawyer Names','tags']]
+            new_df = new_df.merge(df, on='Lawyer Names')
+            df.to_csv('new_df.csv')
 
             # for i in lawyers['gender']:
             #     if i == 'm':
@@ -155,32 +163,32 @@ if choice != "Single Entry":
             #     else:
             #         a = getVector('Female')
 
-            count = 0
-            for i in range(len(lawyers)):
-                if count > 50:
-                    break
-                vec=[]
-                vec.append(getVector(lawyers['experience'][i]))
-                vec.append(getVector(lawyers['field'][i]))
-                vec.append(getVector(lawyers['feedback'][i]))
-                vec.append(1 if lawyers['gender'][i] == 'm' else 0)
-                vec.append(getVector(lawyers['charge'][i]))
-                a = lawyers['avg_days_for_disposal'][i].split('.')[0]
-                vec.append(getVector(a))
-                vec.append(getVector(lawyers['lang'][i]))
-                vec.append(getVector(lawyers['practices_at'][i]))
-                vec.append(getVector(lawyers['location'][i]))
-                b = 0
-                if lawyers['cd'][i].lower() == 'Large Corporations':
-                    b = 1
-                elif lawyers['cd'][i].lower() == 'Small Businesses':
-                    b = 0
-                else:
-                    b = 0.5
-                vec.append(b)
-                vec.append(0 if lawyers['isprobo'][0].lower() == 't' else 1)
-                insert(lawyers['Lawyer Names'][i], vec)
-                count += 1
+            # count = 0
+            # for i in range(len(lawyers)):
+            #     if count > 50:
+            #         break
+            #     vec=[]
+            #     vec.append(getVector(lawyers['experience'][i]))
+            #     vec.append(getVector(lawyers['field'][i]))
+            #     vec.append(getVector(lawyers['feedback'][i]))
+            #     vec.append(1 if lawyers['gender'][i] == 'm' else 0)
+            #     vec.append(getVector(lawyers['charge'][i]))
+            #     a = lawyers['avg_days_for_disposal'][i].split('.')[0]
+            #     vec.append(getVector(a))
+            #     vec.append(getVector(lawyers['lang'][i]))
+            #     vec.append(getVector(lawyers['practices_at'][i]))
+            #     vec.append(getVector(lawyers['location'][i]))
+            #     b = 0
+            #     if lawyers['cd'][i].lower() == 'Large Corporations':
+            #         b = 1
+            #     elif lawyers['cd'][i].lower() == 'Small Businesses':
+            #         b = 0
+            #     else:
+            #         b = 0.5
+            #     vec.append(b)
+            #     vec.append(0 if lawyers['isprobo'][0].lower() == 't' else 1)
+            #     insert(lawyers['Lawyer Names'][i], vec)
+            #     count += 1
 
             # print(new['Lawyer Names'][28])
 
@@ -219,9 +227,13 @@ else:
 
 
     if st.button("Add"):
+        d=pd.read_csv('lawyers_final2.csv')
+        num_rows=d.shape[0]
         details = []
+        details.append(num_rows)
         s = ' '.join([i for i in special])
         l = ' '.join([i for i in languages])
+        details.append(name)
         details.append(experience)
         details.append(s)
         details.append(str(rating))
@@ -232,16 +244,10 @@ else:
         details.append(practices)
         details.append(location)
         details.append(isProbo)
-
-        details = " ".join(details)
-
-        vector = getVector(details)
-
-        try:
-            insert(name, [vector])
-            st.success("Lawyer Inserted Successfully")
-        except Exception as e:
-            st.error("Error while Inserting")
-            print(e)
+        import csv
+        with open(r'lawyers_final2.csv','a') as f:
+            writer=csv.writer(f)
+            writer.writerow(details)
+       
     
 
