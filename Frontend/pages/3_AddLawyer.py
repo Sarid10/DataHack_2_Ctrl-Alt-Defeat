@@ -21,13 +21,110 @@ if choice != "Single Entry":
             # converting information into data
             lawyers['Information']=lawyers['Information'].apply(lambda x : x.split('. '))
             info_lawyers=pd.DataFrame(lawyers['Information'].apply(pd.Series))
+            l_copy = lawyers
             lawyers=lawyers.drop('Information',axis=1)
+
+
+
+
+            # new preprocess
+
+            import re
+
+            def extract_name(string):
+
+                regex = r'(?<=Farhan\s).+'
+                match = re.search(regex, string)
+                if match:
+                    return match.group()
+                else:
+                    return None
+
+            def extract_specialization(string):
+
+                regex = r'(?<=\s)(Labor Law|Consumer Protection Law|Criminal Law|Specialized Court)(?=\s)'
+                match = re.search(regex, string)
+                if match:
+                    return match.group()
+                else:
+                    return None
+
+            def extract_average_disposal_time(string):
+
+                regex = r'(?<=disposal time of\s)\d+\.\d+'
+                match = re.search(regex, string)
+                if match:
+                    return float(match.group())
+                else:
+                    return None
+
+            def extract_cost_per_hour(string):
+
+                regex = r'(?<=cost per hour of\s)\d+\.\d+'
+                match = re.search(regex, string)
+                if match:
+                    return float(match.group())
+                else:
+                    return None
+
+            def extract_languages_spoken(string):
+
+                regex = r'(?<=speaks\s).+'
+                match = re.search(regex, string)
+                if match:
+                    return match.group().split(", ")
+                else:
+                    return None
+
+            def extract_education(string):
+
+                regex = r'(?<=education from\s).+'
+                match = re.search(regex, string)
+                if match:
+                    return match.group()
+                else:
+                    return None
+
+            def extract_location(string):
+
+                regex = r'(?<=located in\s).+'
+                match = re.search(regex, string)
+                if match:
+                    return match.group()
+                else:
+                    return None
+
+            def extract_pro_bono_services(string):
+
+                regex = r'(?<=offers Pro Bono services to\s).+'
+                match = re.search(regex, string)
+                if match:
+                    return True
+                else:
+                    return False
+
+            def extract_client_feedback(string):
+
+                regex = r'(?<=consistently received a\s)\d+\.\d+\sout of\s5\.0\sfor\s\w+\sfeedback\s'
+                match = re.search(regex, string)
+                if match:
+                    return float(match.group())
+                else:
+                    return None
+
+
+
+
+            # 
+            # print(extract_cost_per_hour(info_lawyers[0][0]))
+
+
             import re
             def ey(text):
                 pattern = r'(\d+) years?'
                 years_matches = re.findall(pattern, text)
                 years = [int(match) for match in years_matches]
-                return years[0]
+                return years[0] if years else 0
             lawyers['experience']=info_lawyers[0].apply(ey)
             def fi(str1):
                 pattern = r'in (.*)'
@@ -38,19 +135,22 @@ if choice != "Single Entry":
                     return None
             info_lawyers[0]=info_lawyers[0].apply(fi)
             def remove_and(str1):
+                if not str1:
+                    return ''
                 str1_without_and = str1.replace("and", "")
                 return str1_without_and
             info_lawyers[0]=info_lawyers[0].apply(remove_and)
 
             
-            
-            new_df=pd.read_csv('new_df.csv')
             import os
-            os.remove('new_df.csv')
+            # if os.path.exists("new_df.csv"):
+                # new_df=pd.read_csv('new_df.csv')
+            # if os.path.exists("new_df.csv"):
+                # os.remove('new_df.csv')
             def add_comma(str1):
-                if str1[-1] != ",":
-                    str1 += ","
-                    return str1
+                str1 += ","
+                return str1
+                
             info_lawyers[0]=info_lawyers[0].apply(add_comma)
             lawyers['field']=info_lawyers[0].apply(lambda x:list(set(x.split('Law,'))))
             def extract_feedback(str1):
@@ -217,11 +317,11 @@ else:
         'Hindi', 'Bengali', 'Telugu', 'Marathi', 'Tamil', 'Urdu', 'Gujarati',
         'Malayalam', 'Kannada', 'Odia', 'Punjabi', 'Assamese', 'Maithili',
         'Santali', 'Kashmiri', 'Nepali', 'Konkani', 'Sindhi', 'Dogri',
-        'Manipuri', 'Bodo', 'Khasi', 'Mizo', 'Garo', 'Tulu', 'Konkani'
+        'Manipuri', 'Bodo', 'Khasi', 'Mizo', 'Garo', 'Tulu', 'Konkani', 'English'
     ])
     practices = st.text_input("Practices At:")
     location = st.text_input("Location At:")
-    client_demographics = st.radio("Client Demographics", ("Small Businesses", "Individuals", "Large Corporations"))
+    client_demographics = st.radio("What are you?", ("Small Businesses", "Individuals", "Large Corporations"))
     isProbo = st.radio("Is Probo: ", ('True', 'False'))
     gender = st.radio("Gender: ", ('Male', 'Female'))
 

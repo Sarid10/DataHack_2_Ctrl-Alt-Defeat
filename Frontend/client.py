@@ -11,31 +11,10 @@ predicter = IndianGenderPredictor()
 names_list = pd.read_excel("Gender_final.xlsx")
 name_gender_dict = {}
 
-# import transformers
-# model = AutoModelForSequenceClassification.from_pretrained("nlpaueb/legal-bert-base-uncased")
-# import torch
-
-# input_tensor = torch.tensor([
-#     tokenizer("This contract is governed by the laws of the State of California."),
-#     tokenizer("I killed a person."),
-#     tokenizer("The defendant was found guilty of assault and battery."),
-#     tokenizer("The plaintiff is seeking damages for breach of contract."),
-# ])
-
-# output_tensor = torch.tensor([
-#     1, # contract law
-#     2, # criminal law
-#     2, # criminal law
-#     3, # civil law
-# ])
-
-
-# description = st.text_input("Enter Case Description: ")
-
 special = st.multiselect("Type of Case: ",
                          ['Corporate', 'Consumer protection', 'Labor', 'Intellectual property ', 'Criminal ', 'Tax law', 'Human rights law', 'Family law', 'Civil law', 'Real estate law', 'Constitutional law', 'Media law', 'Entertainment law', 'Environmental law', 'Medical law', 'Immigration law'])
 location = st.text_input("Location At:")
-client_demographics = st.radio("Client Demographics", ("Small Businesses", "Individuals", "Large Corporations"))
+client_demographics = st.radio("What are you?", ("Small Businesses", "Individuals", "Large Corporations"))
 
 languages = st.multiselect("Languages Spoken: ",
                          [
@@ -170,48 +149,149 @@ if st.button("Submit"):
     print(male_l)
     print(female_l)
 
+    tempdf = pd.read_csv('lawyers_final2.csv')
+    
 
     st.header("Females")
-    col1, col2, col3, col4, col5  = st.columns(5)
+    from streamlit_card import card
+
+    
+   
+    
+    col1, col2 = st.columns(2)
     with col1:
-       n=female_l[0]
-       st.text(lawyers['Lawyer Names'][n])
+        n=female_l[0]
+        res = card(
+            title=lawyers['Lawyer Names'][n],
+            text=["Experience: " + str(lawyers['experience'][n]).split('.')[0]+ " years\n","Price : " + str(lawyers['charge'][n]).split('.')[0]+" USD\n","Location : "+str(lawyers['location'][n])],
+            # styles={"card": {
+            #     "background-color":"#FF0000"
+            # }},
+        )
 
     with col2:
         n=female_l[1]
-        st.text(lawyers['Lawyer Names'][n])
+        res = card(
+        title=lawyers['Lawyer Names'][n],
+        text=["Experience: " + str(lawyers['experience'][n]).split('.')[0]+ " years","Price : " + str(lawyers['charge'][n]).split('.')[0]+" USD","Location : "+str(lawyers['location'][n])],
+        # styles={"card": {
+        #     "background-color":"#FF0000"
+        # }},
+    )
+
+
+
+    col3, col4 = st.columns(2)
 
     with col3:
         n=female_l[2]
-        st.text(lawyers['Lawyer Names'][n])
+        res = card(
+        title=lawyers['Lawyer Names'][n],
+        text=["Experience: " + str(lawyers['experience'][n]).split('.')[0]+ " years","Price : " + str(lawyers['charge'][n]).split('.')[0]+" USD","Location : "+str(lawyers['location'][n])],
+        # styles={"card": {
+        #     "background-color":"#FF0000"
+        # }},
+    )
 
     with col4:
         n=female_l[3]
-        st.text(lawyers['Lawyer Names'][n])
+        res = card(
+        title=lawyers['Lawyer Names'][n],
+        text=["Experience: " + str(lawyers['experience'][n]).split('.')[0]+ " years","Price : " + str(lawyers['charge'][n]).split('.')[0]+" USD","Location : "+str(lawyers['location'][n])],
+        # styles={"card": {
+        #     "background-color":"#FF0000"
+        # }},
+    )
+
+    col5,col6 = st.columns(2)
 
     with col5:
+        n=female_l[4]
+        res = card(
+        title=lawyers['Lawyer Names'][n],
+        text=["Experience: " + str(lawyers['experience'][n]).split('.')[0]+ " years","Price : " + str(lawyers['charge'][n]).split('.')[0]+" USD","Location : "+str(lawyers['location'][n])],
+        # styles={"card": {
+        #     "background-color":"#FF0000"
+        # }},
+    )
+    
+    with col6:
         n=female_l[5]
-        st.text(lawyers['Lawyer Names'][n])
+        res = card(
+        title=lawyers['Lawyer Names'][n],
+        text=["Experience: " + str(lawyers['experience'][n]).split('.')[0]+ " years","Price : " + str(lawyers['charge'][n]).split('.')[0]+" USD","Location : "+str(lawyers['location'][n])],
+        # styles={"card": {
+        #     "background-color":"#FF0000"
+        # }},
+    )
+    
+
 
     st.header("Males")
 
-    col1, col2, col3, col4, col5  = st.columns(5)
+    col1, col2 = st.columns(2)
+
     with col1:
        n=male_l[0]
-       st.text(lawyers['Lawyer Names'][n])
+       res = card(
+        title=lawyers['Lawyer Names'][n],
+        text=["Experience: " + str(lawyers['experience'][n]).split('.')[0]+ " years","Price : " + str(lawyers['charge'][n]).split('.')[0]+" USD","Location : "+str(lawyers['location'][n])],
+        # styles={"card": {
+        #     "background-color":"#FF0000"
+        # }},
+      )
 
     with col2:
         n=male_l[1]
-        st.text(lawyers['Lawyer Names'][n])
+        res = card(
+        title=lawyers['Lawyer Names'][n],
+        text=["Experience: " + str(lawyers['experience'][n]).split('.')[0]+ " years","Price : " + str(lawyers['charge'][n]).split('.')[0]+" USD","Location : "+str(lawyers['location'][n])],
+        # styles={"card": {
+        #     "background-color":"#FF0000"
+        # }},
+      )
+
+    
+    col3, col4 = st.columns(2)
 
     with col3:
         n=male_l[2]
-        st.text(lawyers['Lawyer Names'][n])
+        res = card(
+        title=lawyers['Lawyer Names'][n],
+        text=["Experience: " + str(lawyers['experience'][n]).split('.')[0]+ " years","Price : " + str(lawyers['charge'][n]).split('.')[0]+" USD","Location : "+str(lawyers['location'][n])],
+        # styles={"card": {
+        #     "background-color":"#FF0000"
+        # }},
+      )
 
     with col4:
         n=male_l[3]
-        st.text(lawyers['Lawyer Names'][n])
+        res = card(
+        title=lawyers['Lawyer Names'][n],
+        text=["Experience: " + str(lawyers['experience'][n])+ " years","Price : " + str(lawyers['charge'][n]),"Location : "+str(lawyers['location'][n])],
+        # styles={"card": {
+        #     "background-color":"#FF0000"
+        # }},
+      )
+
+    col5,col6 = st.columns(2)
 
     with col5:
+        n=male_l[4]
+        res = card(
+        title=lawyers['Lawyer Names'][n],
+        text=["Experience: " + str(lawyers['experience'][n])+ " years","Price : " + str(lawyers['charge'][n]),"Location : "+str(lawyers['location'][n])],
+        # styles={"card": {
+        #     "background-color":"#FF0000"
+        # }},
+      )
+    
+    with col6:
         n=male_l[5]
-        st.text(lawyers['Lawyer Names'][n])
+        res = card(
+        title=lawyers['Lawyer Names'][n],
+        text=["Experience: " + str(lawyers['experience'][n])+ " years","Price : " + str(lawyers['charge'][n]),"Location : "+str(lawyers['location'][n])],
+        # styles={"card": {
+        #     "background-color":"#FF0000"
+        # }},
+      )
