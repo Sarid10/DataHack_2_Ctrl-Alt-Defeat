@@ -11,6 +11,27 @@ predicter = IndianGenderPredictor()
 names_list = pd.read_excel("Gender_final.xlsx")
 name_gender_dict = {}
 
+# import transformers
+# model = AutoModelForSequenceClassification.from_pretrained("nlpaueb/legal-bert-base-uncased")
+# import torch
+
+# input_tensor = torch.tensor([
+#     tokenizer("This contract is governed by the laws of the State of California."),
+#     tokenizer("I killed a person."),
+#     tokenizer("The defendant was found guilty of assault and battery."),
+#     tokenizer("The plaintiff is seeking damages for breach of contract."),
+# ])
+
+# output_tensor = torch.tensor([
+#     1, # contract law
+#     2, # criminal law
+#     2, # criminal law
+#     3, # civil law
+# ])
+
+
+# description = st.text_input("Enter Case Description: ")
+
 special = st.multiselect("Type of Case: ",
                          ['Corporate', 'Consumer protection', 'Labor', 'Intellectual property ', 'Criminal ', 'Tax law', 'Human rights law', 'Family law', 'Civil law', 'Real estate law', 'Constitutional law', 'Media law', 'Entertainment law', 'Environmental law', 'Medical law', 'Immigration law'])
 location = st.text_input("Location At:")
